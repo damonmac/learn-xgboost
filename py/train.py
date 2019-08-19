@@ -103,9 +103,11 @@ with mlflow.start_run():
   # ................................
   plot_importance(clf)
   plt.show()
+
   plot_tree(clf)
-  plt.show()
+  plt.savefig("tree.png")
   mlflow.log_artifact("tree.png")
+  plt.show()
 
   precision, recall, _ = precision_recall_curve(y_test, y_score)
   plt.step(recall, precision, color='b', alpha=0.2, where='post')
