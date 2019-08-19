@@ -38,21 +38,10 @@ with mlflow.start_run():
   clf.fit(X_train, y_train, early_stopping_rounds=earlyStopping, eval_metric=["error", "logloss"], eval_set=eval_set, verbose=True)
   print("training time:", round(time()-t0, 2), "s")
 
-  # performance metrics
+  # training metrics
   results = clf.evals_result()
   epochs = len(results['validation_0']['error'])
   x_axis = range(0, epochs)
-
-  # plot log loss
-  fig, ax = plt.subplots()
-  ax.plot(x_axis, results['validation_0']['logloss'], label='Train')
-  ax.plot(x_axis, results['validation_1']['logloss'], label='Test')
-  ax.legend()
-  plt.ylabel('Log Loss')
-  plt.title('XGBoost Log Loss')
-  plt.savefig("Logloss.png")
-  mlflow.log_artifact("Logloss.png")
-  plt.show()
 
   # plot classification error
   fig, ax = plt.subplots()
@@ -65,10 +54,19 @@ with mlflow.start_run():
   mlflow.log_artifact("Error.png")
   plt.show()
 
+  # plot classification log loss
+  fig, ax = plt.subplots()
+  ax.plot(x_axis, results['validation_0']['logloss'], label='Train')
+  ax.plot(x_axis, results['validation_1']['logloss'], label='Test')
+  ax.legend()
+  plt.ylabel('Log Loss')
+  plt.title('XGBoost Log Loss')
+  plt.savefig("Logloss.png")
+  mlflow.log_artifact("Logloss.png")
+  plt.show()
 
   # persist the model
   # clf.save_model('xgb.model')
-  # clf.dump_model('../models/xgb.raw.txt', 'featmap.txt')
   mlflow.sklearn.log_model(clf, "model")
 
   t0 = time()
@@ -81,8 +79,6 @@ with mlflow.start_run():
   accuracy = accuracy_score(y_test, pred)
   print("Accuracy: %.2f%%" % (accuracy * 100.0))
 
-  mlflow.log_metric("accuracy", accuracy)
-
   precision = precision_score(y_test, pred)
   print("Precision: %.2f%%" % (precision * 100.0))
 
@@ -93,25 +89,29 @@ with mlflow.start_run():
   average_precision = average_precision_score(y_test, y_score)
   print("Average precision-recall score: %.2f%%" % (average_precision * 100.0))
 
+  mlflow.log_metric("accuracy", accuracy)
+  mlflow.log_metric("precision", precision)
+  mlflow.log_metric("recall", recall)
+  mlflow.log_metric("average_precision", average_precision)
+
   importances = clf.get_booster().get_fscore()
   for key in importances:
     mlflow.log_metric(key, importances[key])
 
   ##################################
-  # Plot the Precision-Recall curve
+  # Plot the tree, importance and Precision-Recall curve
   # ................................
+  plot_importance(clf)
+  plt.show()
   plot_tree(clf)
-  plt.savefig("tree.png", dpi = 2400)
+  plt.show()
   mlflow.log_artifact("tree.png")
 
   precision, recall, _ = precision_recall_curve(y_test, y_score)
-  plt.figure(num=None, figsize=(8,6), dpi=160)
   plt.step(recall, precision, color='b', alpha=0.2, where='post')
-
   plt.xlabel('Recall')
   plt.ylabel('Precision')
   plt.title('Precision-Recall curve: AP={0:0.4f}'.format(average_precision))
   plt.savefig("PR_curve.png")
   mlflow.log_artifact("PR_curve.png")
-
   plt.show()
