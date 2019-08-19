@@ -15,7 +15,7 @@ If you want a specific version of scikit the command would be pip3 install sciki
 #### Training and saving a model
 To train a classifier you would run:
 
-     python3 py/train-simple.py
+     python3 train-simple.py
 
 You can run the the python scripts from IntelliJ with the python plug-in.
 

@@ -6,7 +6,7 @@ from prepare import preprocess
 from sklearn.metrics import accuracy_score
 from xgboost import XGBClassifier
 
-X_train, X_test, y_train, y_test = preprocess("./data/vector3")
+X_train, X_test, y_train, y_test = preprocess("../data/vector1")
 
 params = {'n_estimators': 700, 
           'max_depth': 7, 

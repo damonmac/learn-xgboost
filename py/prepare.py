@@ -5,7 +5,7 @@ import numpy as np
 from numpy import loadtxt
 from sklearn import model_selection
 
-def preprocess(features_file = "./data/vector1"):
+def preprocess(features_file = "../data/vector1"):
     # feaures and labels are put into numpy arrays, which play nice with sklearn functions
     data = loadtxt(features_file)
     X, y = data[:, 1:], data[:, 0]
