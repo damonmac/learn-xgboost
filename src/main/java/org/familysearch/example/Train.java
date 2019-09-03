@@ -18,7 +18,7 @@ public class Train {
   private static final String LIBSVM_TRAIN_FILE = "data/javaVector_train.libsvm";
   private static final String LIBSVM_EVAL_FILE = "data/javaVector_eval.libsvm";
   private static final String OUTPUT_MODEL_FILE = "xgboost.model";
-  private static final int TRAINING_ITERATIONS = 100;
+  private static final int TRAINING_ITERATIONS = 1000;
 
   public static void main(String[] args) {
     try {
@@ -39,10 +39,10 @@ public class Train {
 
     // Add any other desired params here....
     params.put("eta", 0.1);
-    params.put("max_depth", 7);
-    params.put("gamma", 0.95);
-    params.put("subsample", 0.95);
-    params.put("silent", 1);
+    params.put("max_depth", 4);
+    params.put("gamma", 0);
+    params.put("subsample", 1);
+    params.put("colsample_bytree", 1);
     params.put("objective", "binary:logistic");
 
     Map<String, DMatrix> watches = new HashMap<>();
