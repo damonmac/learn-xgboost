@@ -10,32 +10,35 @@ from sklearn.metrics import accuracy_score, recall_score, precision_score, avera
 from xgboost import XGBClassifier, plot_tree, plot_importance
 import matplotlib.pyplot as plt
 
-X_train, X_test, y_train, y_test = preprocess()
+X_train, X_test, y_train, y_test = preprocess("../data/vector1")
 
 mlflow.set_experiment("matching")
 # mlflow.set_tracking_uri("http://127.0.0.1:5000")
 
 with mlflow.start_run():
 
-  params = {'n_estimators': 700, 
-            'eta': 0.1, 
-            'max_depth': 7, 
-            'gamma': 0.95, 
-            'subsample': 0.95, 
-            'silent': 1,
+  params = {'n_estimators': 1000,
+            'n_jobs': 4,
+            'eta': 0.1,
+            'max_depth': 4,
+            'gamma': 0,
+            'subsample': 1,
+            'colsample_bytree': 1,
             'objective': 'binary:logistic'}
 
   for key in params:
     mlflow.log_param(key, params[key])
 
-  earlyStopping = 10
-  mlflow.log_param("early_stopping_rounds", earlyStopping)
+  # earlyStopping = 30
+  # mlflow.log_param("early_stopping_rounds", earlyStopping)
 
   clf = XGBClassifier(**params)
 
   t0 = time()
+  eval_metrics = ["error", "logloss"]
   eval_set = [(X_train, y_train),(X_test, y_test)]
-  clf.fit(X_train, y_train, early_stopping_rounds=earlyStopping, eval_metric=["error", "logloss"], eval_set=eval_set, verbose=True)
+  clf.fit(X_train, y_train, eval_metric=eval_metrics, eval_set=eval_set, verbose=True)
+  # clf.fit(X_train, y_train, early_stopping_rounds=earlyStopping, eval_metric=eval_metrics, eval_set=eval_set, verbose=True)
   print("training time:", round(time()-t0, 2), "s")
 
   # training metrics
@@ -43,27 +46,17 @@ with mlflow.start_run():
   epochs = len(results['validation_0']['error'])
   x_axis = range(0, epochs)
 
-  # plot classification error
-  fig, ax = plt.subplots()
-  ax.plot(x_axis, results['validation_0']['error'], label='Train')
-  ax.plot(x_axis, results['validation_1']['error'], label='Test')
-  ax.legend()
-  plt.ylabel('Classification Error')
-  plt.title('XGBoost Classification Error')
-  plt.savefig("Error.png")
-  mlflow.log_artifact("Error.png")
-  plt.show()
-
-  # plot classification log loss
-  fig, ax = plt.subplots()
-  ax.plot(x_axis, results['validation_0']['logloss'], label='Train')
-  ax.plot(x_axis, results['validation_1']['logloss'], label='Test')
-  ax.legend()
-  plt.ylabel('Log Loss')
-  plt.title('XGBoost Log Loss')
-  plt.savefig("Logloss.png")
-  mlflow.log_artifact("Logloss.png")
-  plt.show()
+  # plot classification error and log loss
+  for metric_name in eval_metrics:
+    fig, ax = plt.subplots()
+    ax.plot(x_axis, results['validation_0'][metric_name], label='Train')
+    ax.plot(x_axis, results['validation_1'][metric_name], label='Test')
+    ax.legend()
+    plt.ylabel('Classification ' + metric_name)
+    plt.title('XGBoost Classification ' + metric_name)
+    plt.savefig("Error.png")
+    mlflow.log_artifact("Error.png")
+    plt.show()
 
   # persist the model
   # clf.save_model('xgb.model')
