@@ -21,4 +21,4 @@ You can run the the python scripts from IntelliJ with the python plug-in.
 
 #### Sample data
 
-There are 2660 pairs in csv format in the data directory 1193 neg (start with "0"), and 1467 pos (start with "1").  The fields then alternate after the label for target, then candidate.  They include person name, spouse, parent1, parent2, child, person birth year, month, day, country, county, city, location, census year, month, day, country, county, city, location, and death year, month, day, country, county, city, location.  The last field is a reference id.
+There are 2660 pairs in csv format in the data directory 1193 neg (start with "0"), and 1467 pos (start with "1").  The fields then alternate after the good (1) or bad (0) label and include person name, spouse name, father name, mother name, child name, person birth detail (year, month, day, country, county, city, location), spouse birth detail (7 fields), child birth detail (7 fields), census detail (year, month, day, country, county, city, location), and death detail (year, month, day, country, county, city, location).  The last field is a reference id.
