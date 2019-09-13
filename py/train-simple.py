@@ -1,31 +1,36 @@
 #!/usr/bin/python
 
 import sys
-sys.path.append("./")
-from prepare import preprocess
-from sklearn.metrics import accuracy_score, average_precision_score
-from xgboost import XGBClassifier
+import xgboost as xgb
+import numpy as np
+from sklearn.metrics import accuracy_score
 
-X_train, X_test, y_train, y_test = preprocess("../data/vector3")
+# load the feature names
+with open("data/features.txt", "r") as f:
+  feature_names = f.read().split("\n")[:-1]
 
-params = {'n_estimators': 1000,
-          'n_jobs': 4,
+train = xgb.DMatrix('data/javaVector_train.libsvm', feature_names=feature_names)
+test = xgb.DMatrix('data/javaVector_eval.libsvm', feature_names=feature_names)
+
+eval_metrics = ['error', 'logloss']
+num_boost_rounds = 1000
+
+params = {'n_jobs': 4,
           'eta': 0.1,
-          'max_depth': 6,
+          'max_depth': 4,
           'gamma': 0,
           'subsample': 1,
           'colsample_bytree': 1,
+          'eval_metric': eval_metrics,
           'objective': 'binary:logistic'}
 
-clf = XGBClassifier(**params)
+results = {}
+watchlist = [(train, 'train'), (test, 'test')]
+clf = xgb.train(params, train, num_boost_rounds, watchlist, evals_result = results, verbose_eval=100)
 
-eval_set = [(X_train, y_train),(X_test, y_test)]
-clf.fit(X_train, y_train, eval_metric=["logloss"], eval_set=eval_set, verbose=100)
+print("Calculating predictions")
+predictions = clf.predict(test)
+predict_labels = np.array([1 if x >= 0.6 else 0 for x in predictions])
 
-predictions = clf.predict(X_test)
-accuracy = accuracy_score(y_test, predictions)
+accuracy = accuracy_score(test.get_label(), predict_labels)
 print("Accuracy: %.2f%%" % (accuracy * 100.0))
-
-y_score = clf.predict_proba(X_test)[:,1]
-average_precision = average_precision_score(y_test, y_score)
-print("Average precision score: %.2f%%" % (average_precision * 100.0))
