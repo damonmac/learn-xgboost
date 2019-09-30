@@ -11,13 +11,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class CreateFeatureVectors {
+public class CreateFeatureVectors2 {
 
   private static final int[] DATE_FIELDS = {10, 24, 38, 66};
   private static final String OUTPUT_PATH = "data/javaVector";
 
   public static void main(String[] args) {
-    new CreateFeatureVectors().run();
+    new CreateFeatureVectors2().run();
   }
 
   public void run() {
