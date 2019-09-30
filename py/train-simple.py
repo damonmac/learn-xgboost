@@ -30,7 +30,12 @@ clf = xgb.train(params, train, num_boost_rounds, watchlist, evals_result = resul
 
 print("Calculating predictions")
 predictions = clf.predict(test)
-predict_labels = np.array([1 if x >= 0.6 else 0 for x in predictions])
+predict_labels = np.array([1 if x >= 0.5 else 0 for x in predictions])
+labels = test.get_label()
 
-accuracy = accuracy_score(test.get_label(), predict_labels)
+fp = sum((predictions >= 0.5) & (labels < 1)) # false positives
+fn = sum((predictions < 0.5) & (labels > 0)) # false negatives
+print(f"{fp} false positives, {fn} false negatives")
+
+accuracy = accuracy_score(labels, predict_labels)
 print("Accuracy: %.2f%%" % (accuracy * 100.0))
