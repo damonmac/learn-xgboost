@@ -50,22 +50,22 @@ public class CreateFeatureVectors2 {
               if (targetName.equals(candidateName)) {
                 sameNames++;
               }
-              else {
-                differentNames--;
-              }
+//              else {
+//                differentNames--;
+//              }
             }
           }
           vectorValues.add(String.valueOf(sameNames > 0 ? sameNames : differentNames));
         }
-        else if (dateFields.contains(i)) {
-          try {
-            int dateDifference = Math.abs(Integer.parseInt(targetField) - Integer.parseInt(candidateField));
-            vectorValues.add(String.valueOf(dateDifference < 5 ? 5 - dateDifference : 0));
-          }
-          catch (NumberFormatException e) {
-            vectorValues.add("0");
-          }
-        }
+//        else if (dateFields.contains(i)) {
+//          try {
+//            int dateDifference = Math.abs(Integer.parseInt(targetField) - Integer.parseInt(candidateField));
+//            vectorValues.add(String.valueOf(dateDifference < 5 ? 5 - dateDifference : 0));
+//          }
+//          catch (NumberFormatException e) {
+//            vectorValues.add("0");
+//          }
+//        }
         else {
           // Basic logic - check if the values are an exact match
           if (targetField.equals(candidateField)) {
