@@ -69,10 +69,10 @@ public class CreateFeatureVectors1 {
     for (String line : inputFile) {
       if (linesCounted < NUM_EVAL_LINES) {
         linesCounted++;
-        trainLines.add(line);
+        evalLines.add(line);
       }
       else {
-        evalLines.add(line);
+        trainLines.add(line);
       }
     }
     try {
