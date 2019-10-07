@@ -17,6 +17,8 @@ public class CreateFeatureVectors2 {
   private static final String LIBSVM_TRAIN_FILE = "data/javaVector_train.libsvm";
   private static final String LIBSVM_EVAL_FILE = "data/javaVector_eval.libsvm";
 
+  private static final int NUM_EVAL_LINES = 400;
+
   public static void main(String[] args) throws IOException {
     new CreateFeatureVectors2().run();
   }
@@ -92,11 +94,13 @@ public class CreateFeatureVectors2 {
 
 
   private void createLibSvmFile() {
+    int linesCounted = 0;
     List<String> trainLines = new ArrayList<>();
     List<String> evalLines = new ArrayList<>();
     List<String> inputFile = Utils.readLines(VECTOR_FILE);
     for (String line : inputFile) {
-      if (Math.random() > 0.15) {
+      if (linesCounted < NUM_EVAL_LINES) {
+        linesCounted++;
         trainLines.add(line);
       }
       else {
