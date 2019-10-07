@@ -16,12 +16,13 @@ public class CreateFeatureVectors1 {
   private static final String LIBSVM_TRAIN_FILE = "data/javaVector_train.libsvm";
   private static final String LIBSVM_EVAL_FILE = "data/javaVector_eval.libsvm";
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
     new CreateFeatureVectors1().run();
   }
 
-  public void run() {
+  public void run() throws IOException {
     List<String> lines = Utils.readLines("data/pairs.csv");
+    Files.deleteIfExists(Paths.get(OUTPUT_PATH));
     for (String line : lines) {
       List<String> vectorValues = new ArrayList<>();
       List<String> fields = new ArrayList<>(Arrays.asList(line.split(",")));
@@ -48,13 +49,13 @@ public class CreateFeatureVectors1 {
           Collections.singletonList(vectorValues.toString().replaceAll("([,\\[\\]])", "")),
           StandardCharsets.UTF_8,
           Files.exists(path) ? StandardOpenOption.APPEND : StandardOpenOption.CREATE);
-        createLibSvmFile();
       }
       catch (IOException e) {
         System.err.println("Unable to write to file " + OUTPUT_PATH);
         e.printStackTrace();
       }
     }
+    createLibSvmFile();
 
   }
 
@@ -69,6 +70,13 @@ public class CreateFeatureVectors1 {
       else {
         evalLines.add(line);
       }
+    }
+    try {
+      Files.deleteIfExists(Paths.get(LIBSVM_TRAIN_FILE));
+      Files.deleteIfExists(Paths.get(LIBSVM_EVAL_FILE));
+    }
+    catch (IOException e) {
+      e.printStackTrace();
     }
     writeLibSvmLines(trainLines, LIBSVM_TRAIN_FILE);
     writeLibSvmLines(evalLines, LIBSVM_EVAL_FILE);
