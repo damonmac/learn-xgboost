@@ -65,7 +65,7 @@ javaVector
 javaVector_eval.libsvm
 javaVector_train.libsvm
 
-Question: What percentage of input ends up in the vector train and eval files?
+*Question:* What percentage of input ends up in the vector train and eval files?
 
 ### Training a model
 We want to train our first model and assess the accuracy of the model against the test set.  To do this you can run the py/train-simple.py script.  First review the script, and note you need to the the necessary dependencies installed (see above).  Next to train the model run:
@@ -74,7 +74,7 @@ We want to train our first model and assess the accuracy of the model against th
      
 Notice we are loading the feature_names, and then the train and eval vector files.  Now would be a good time to review the [xgboost train API documentation](https://xgboost.readthedocs.io/en/latest/python/python_api.html#module-xgboost.training).  Notice that the classifier output from train is used to predict against the test set.  The predictions are then labeled depending on their output probability, and the false-positives and false-negatives are computed by comparing those labels with the input labels.
 
-Question: What is the accuracy of your model and how is accuracy computed?
+*Question:* What is the accuracy of your model and how is accuracy computed?
 
 ### Building and refining features
 We really need to understand the data we are trying to represent to the machine to build the best model.  In looking at this data sample how can we better compare the target and sample?
@@ -89,11 +89,11 @@ Census detail: ...
 
 Notice that year/month/day are broken into separate fields.  Why would this be better than just representing a single date?  Notice that the country/state/county/city data is given in codes.  Why is that necessary if we want to compare them?  Next review and run the CreateFeatureVectors2.java file.
 
-Question: How did the output vectors change?
+*Question:* How did the output vectors change?
 
 Train the model with the new vectors.
 
-Question: What was the accuracy with the improved name comparison?
+*Question:* What was the accuracy with the improved name comparison?
 
 Consider these questions:
 * Remember we just compared all fields exactly.  What could we do better when representing the data to the classifier?
@@ -103,28 +103,32 @@ Consider these questions:
 
 So far we have made a few observations.  Simply comparing name strings doesn't best represent the data to the machine.  Data needs to be normalized and bucketized as we build features.  We have only represented optimistic features to the classifier - patterns to learn that mean you are the same.  Next we will uncomment the differentNames clause in the code.  
 
-Question: What will happen with the differentNames clause uncommented?
+*Question:* What will happen with the differentNames clause uncommented?
 
 Create the new vectors and train the model.
 
-Question: Was the accuracy improved?  How much?  How is this implementation flawed?
+*Question:* Was the accuracy improved?  How much?  How is this implementation flawed?
 
 Next consider the dates in the input data.  Close inspection will show that often birth dates are estimates, based on age declared at the time the record is made.  So we need to come up with a way to represent year alignment that is close - and let the machine learn which cases it should pay attention to that.  We have already called out the date fields in CreateFeatureVectors2.java (DATE_FIELDS = {10, 24, 38, 66}).  Please review the code commented out that does more than a string compare for the date fields.
 
 Remember that 0 is the default value, and means no data.  So how will we represent year alignment, and the differences?
 
-Question: What value will the date fields contain if the year differs by 1?  What about if they differ by 2, or 5?
+*Question:* What value will the date fields contain if the year differs by 1?  What about if they differ by 2, or 5?
 
 Please run the CreateFeatureVectors2.java file after uncommenting the code that compares the years into buckets and train a new model.
 
-Question: What is the accuracy now?  How could you improve this bucketing?
+*Question:* What is the accuracy now?  How could you improve this bucketing?
 
 ### Analyzing the model
 We have been using the accuracy at 50% probability to measure our progress by running the train-simple.py script, but there are lots of other ways to analyze our model.  Also, accuracy might be better if we choose to look at a different probability threshold.  Please take some time and review the train.py script.  Can you see it contains the same train and predict from the train-simple.py script, but there are additional modules loaded.  There is logging and artifact collection using mlflow.  There are additional analysis tools setup - and we have the results at each training iteration.
 
 To start with you can see we will graph the accuracy at each training iteration.  Please train the same vectors you trained above, but this time use the py/train.py script instead of the py/train-simple.py script.
 
-The train.py script will present a number of graphs: Error rates for each iteration, Logloss for each training iteration, Precision/Recall curve for your model, feature importance for your model, and a the decision tree from your model.  (Note: You can close each graph as it pops up, and the next graph will appear.)
+The train.py script will present a number of graphs: Error rates for each iteration, Logloss for each training iteration, Precision/Recall curve for your model, feature importance for your model, and a the decision tree from your model.  (Note: You can close each graph as it pops up, and the next graph will appear.)  Please review each graph and spend some time on the feature importance, and tree plot graphs.
+
+*Question:* What are the three most important features of your model?
+
+*Question:* Where in the tree plot is your most important feature?
 
 We haven't discussed overfitting yet, but your simple training output showed that the error rate of your test set actually started getting worse during training.  The Error rates graph gives you some idea of where your test set error rates stopped getting better.
 
@@ -132,9 +136,52 @@ If you are not familiar with logloss, or the early stopping rounds feature of xg
 
 Xgboost has an [early stopping rounds](https://xgboost.readthedocs.io/en/latest//python/python_api.html#module-xgboost.training) parameter we can use during training.  We tell xgboost to watch back some number of iterations, and let us know when the last set in our watch list stops improving.  Find the commented out 'early_stopping_rounds' code, and exchange it for the existing train line above it.  Try your training again.
 
-Question: What iteration did your model stop on?  Was your accuracy improved?
+*Question:* What iteration did your model stop on?  Was your accuracy improved?
+
+The Precision/Recall graph shows the tension between getting all the answers right, and getting answers for all the questions.  YOu can find an optimal point on the curve where you maximize precision or recall, or maybe you want to balance them.  Then you can find on that curve what the precision threshold is at that point.  If you are interested in pursuing treshold analysis you can look into the data behind the P/R curve.
 
 ### Adjusting parameters
-We 
+The number of features you have, the way the represent your problem, the amount of training data, the percentage and representativeness of your test set, and the model parameters all influence your ideal outcome.  The complexity of your machine learning model has an optimum for your problem, and they way you have represented it.  So as the data, or features, or parameters change there are different potential optimization points.  This is important to realize as we try to introduce and adjust a few parameters.  It's possible that just a few adjustments to parameters will best leverage the technology you have chosen.
+
+Most of the parameters for xgboost are set to avoid overfitting, and defaults are conservative.  But xgboost is pretty forgiving, and we won't be able to experiment with all the parameters in this micro-badge.  Here is a short explanation of a few parameters:
+
+* max_depth: maximum depth of a tree - increasing may lead to complex tree and overfitting
+* subsample: subsample ratio of training instances, for example .5 would use only half of the training data before each epoch
+* colsample_bytree: subsample ratio of columns for each epoch
+* eta: the learning rate, or the step size shrinkage used to prevent overfitting - each epoch it shrinks the feature weights to make it more conservative
+* gamma: minimum loss reduction to make further partition on lead node - larger gamma is more conservative
+
+We have called out some basic parameters in the params dictionary in the train.py script.  We have been using:
+
+eval_metrics = ['error', 'logloss']
+num_boost_rounds = 1000
+params = {'n_jobs': 4,
+          'eta': 0.1,
+          'max_depth': 4,
+          'gamma': 0,
+          'subsample': 1,
+          'colsample_bytree': 1,
+          'eval_metric': eval_metrics,
+          'objective': 'binary:logistic'}
+
+A few pointers on the different xgboost [general parameters](https://xgboost.readthedocs.io/en/latest//parameter.html#general-parameters) and [booster parameters](https://xgboost.readthedocs.io/en/latest//parameter.html#parameters-for-tree-booster): 
+* Our sample data is small enough that we don't notice, but for larger datasets xgboost scales very well.  The n_jobs can leverage the cores in your computer to train in parallel.  Across the different languages this option changes a bit; for example notice in the Train.java file there is no n_jobs parameter.
+* eta is also sometimes called the learning rate, and is important to prevent overfitting
+* We are using defaults for subsample and colsample_bytree - which means we use all the training data at each iteration.  Often, you want to generalize your problem across your training data - so these settings see if the system can generalize solutions when some part of the training data is suppressed each iteration.
+
+We are going to experiment with the max_depth option.  This controls the depth of the resulting decision tree, and probably has some affinity to the number of features you are working with.  For now let's experiment by changing the max_depth from 4 to 6.  Retrain and analyze your model.
+
+*Question:* How is your accuracy and tree impacted by this change?
+
+Try adjusting max_depth to 5 instead of 6.
 
 ### Building your data-science superpowers
+Doing all these experiments requires some scientific rigor to understand what is changing, and to track results.  Along the way each training run has been logging the results into an artifact directory, but also the parameters, metrics and artifacts have been logged into [mlflow](https://mlflow.org/) locally.  This is an open-source tool for tracking machine learning life-cycle, and we will just be demonstrating a small portion of the functionality - logging training runs.
+
+
+
+* Getting good labeled data to represent your problem is often the hardest thing
+* Feature selection and development is important
+* Parameters are important in optimizing the model
+* Decision trees are fast and pretty forgiving, but also prone to overfitting
+* Analysis tools are key in understanding and building good models
