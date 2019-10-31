@@ -95,6 +95,12 @@ Train the model with the new vectors.
 
 Question: What was the accuracy with the improved name comparison?
 
+Consider these questions:
+* Remember we just compared all fields exactly.  What could we do better when representing the data to the classifier?
+* Are there some fields that you know should be compared differently?
+* How much do improved features help the model?  Will we need to do additional parameter optimization if the features improve?
+* What will happen to feature importance if we improve the name feature?
+
 So far we have made a few observations.  Simply comparing name strings doesn't best represent the data to the machine.  Data needs to be normalized and bucketized as we build features.  We have only represented optimistic features to the classifier - patterns to learn that mean you are the same.  Next we will uncomment the differentNames clause in the code.  
 
 Question: What will happen with the differentNames clause uncommented?
@@ -103,9 +109,32 @@ Create the new vectors and train the model.
 
 Question: Was the accuracy improved?  How much?  How is this implementation flawed?
 
-Next
+Next consider the dates in the input data.  Close inspection will show that often birth dates are estimates, based on age declared at the time the record is made.  So we need to come up with a way to represent year alignment that is close - and let the machine learn which cases it should pay attention to that.  We have already called out the date fields in CreateFeatureVectors2.java (DATE_FIELDS = {10, 24, 38, 66}).  Please review the code commented out that does more than a string compare for the date fields.
+
+Remember that 0 is the default value, and means no data.  So how will we represent year alignment, and the differences?
+
+Question: What value will the date fields contain if the year differs by 1?  What about if they differ by 2, or 5?
+
+Please run the CreateFeatureVectors2.java file after uncommenting the code that compares the years into buckets and train a new model.
+
+Question: What is the accuracy now?  How could you improve this bucketing?
+
 ### Analyzing the model
+We have been using the accuracy at 50% probability to measure our progress by running the train-simple.py script, but there are lots of other ways to analyze our model.  Also, accuracy might be better if we choose to look at a different probability threshold.  Please take some time and review the train.py script.  Can you see it contains the same train and predict from the train-simple.py script, but there are additional modules loaded.  There is logging and artifact collection using mlflow.  There are additional analysis tools setup - and we have the results at each training iteration.
+
+To start with you can see we will graph the accuracy at each training iteration.  Please train the same vectors you trained above, but this time use the py/train.py script instead of the py/train-simple.py script.
+
+The train.py script will present a number of graphs: Error rates for each iteration, Logloss for each training iteration, Precision/Recall curve for your model, feature importance for your model, and a the decision tree from your model.  (Note: You can close each graph as it pops up, and the next graph will appear.)
+
+We haven't discussed overfitting yet, but your simple training output showed that the error rate of your test set actually started getting worse during training.  The Error rates graph gives you some idea of where your test set error rates stopped getting better.
+
+If you are not familiar with logloss, or the early stopping rounds feature of xgboost please read this article about [Avoiding Overfitting by Early Stopping Rounds in Xgboost](https://machinelearningmastery.com/avoid-overfitting-by-early-stopping-with-xgboost-in-python/).  The [learning task parameters](https://xgboost.readthedocs.io/en/latest//parameter.html#learning-task-parameters) section describes a number of metrics available during training.  We are going to use logloss as a way pinpoint where overfitting is predicted by the test set.
+
+Xgboost has an [early stopping rounds](https://xgboost.readthedocs.io/en/latest//python/python_api.html#module-xgboost.training) parameter we can use during training.  We tell xgboost to watch back some number of iterations, and let us know when the last set in our watch list stops improving.  Find the commented out 'early_stopping_rounds' code, and exchange it for the existing train line above it.  Try your training again.
+
+Question: What iteration did your model stop on?  Was your accuracy improved?
 
 ### Adjusting parameters
+We 
 
 ### Building your data-science superpowers
