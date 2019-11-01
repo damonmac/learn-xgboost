@@ -1,14 +1,14 @@
 # learn-xgboost
-Binary classification example code and data for xgboost.  If you fork this repository and work through all the exercises in this README you can earn the Machine Learning micro-badge (exercises and questions below).  The example training code here is given in Python and Java, but we will focus on Python for training.  The feature development will be in Java.  So you can open this in Intellij, but you will need to have Python installed.
+Binary classification example code and data for xgboost.  If you fork this repository and work through all the exercises in this README you can earn the Machine Learning micro-badge (exercises and questions below).  The example training code here is given in Python and Java, but we will focus on Python for training.  The feature development will be in Java.  So you can open this project in Intellij, but you will need to have Python installed.  You do not need to know much Python for the micro-badge, as mostly you will just be adjusting parameters in Python.
 
 #### Installation
 
-You need to have [python](https://www.python.org/) which includes package manager pip.  Mac comes with Python2, but we need python 3.7 or newer.  If you use brew to install python3, then python3 is an alias you can use.  We will also need some graphing tools for analysis.  To install python, [xgboost](https://xgboost.readthedocs.io/en/latest/python/python_api.html#module-xgboost.sklearn), graphing and tracking tools and scikit-learn on Mac:
+You need to have [python](https://www.python.org/) installed which includes package manager pip.  Mac comes with Python2, but we need python 3.7 or newer.  If you use brew to install python3, then python3 is an alias you can use.  We will also need some graphing tools for analysis.  To install python, [xgboost](https://xgboost.readthedocs.io/en/latest/python/python_api.html#module-xgboost.sklearn), graphing and tracking tools and scikit-learn on Mac:
 
      brew install python3 graphviz
      pip3 install scikit-learn xgboost mlflow matplotlib
      
-On Windows you can [install Python from the Microsoft Store](https://www.microsoft.com/en-us/p/python-37/9nj46sx7x90p?activetab=pivot:overviewtab) and then run the pip3 install command above.  On Linux you will want to install similar package names with your package manager.
+On Windows you can [install Python from the Microsoft Store](https://www.microsoft.com/en-us/p/python-37/9nj46sx7x90p?activetab=pivot:overviewtab) and then open a terminal and run the pip3 install command above.  On Linux you will want to install similar package names with your package manager.
 
 #### Training a model with Python
 To train a classifier and test that you have installed the main depdendencies you would run:
@@ -42,7 +42,7 @@ To get started you need to fork this repository.  You can edit this file and ans
      Fork this repo.
 
 ### What is xgboost (Extreme Gradient Boosting)
-Xgboost is a popular machine learning algorithm.  It creates boosted decision trees, and has a number of performance and optimization techniques built in.  There is good support and documentation at https://xgboost.ai/ and language support for Python, Java, R, and others.  There are many different algorithms and approaches to machine learning, depending on the problem you want to solve - but we will focus on xgboost in this badge.  To read about other algorithms and solutions scikit-learn is a good resource.  Within scikit you can easily experiment with different machine learning methods - see the API docs for examples.
+Xgboost is a popular machine learning algorithm.  It creates boosted decision trees, and has a number of performance and optimization techniques built in.  There is good support and documentation at https://xgboost.ai/ and language support for [Python, Java, R, and others](https://xgboost.readthedocs.io/en/latest//index.html).  There are many different algorithms and approaches to machine learning, depending on the problem you want to solve - but we will focus on xgboost in this badge.  To read about other algorithms and solutions [scikit-learn](https://scikit-learn.org/stable/index.html) is a good resource.  Within scikit you can easily experiment with different machine learning methods.  We will only use a few analysis tools from scikit, but see the [scikit API docs](https://scikit-learn.org/stable/modules/classes.html) for examples and documentation if you want.
 
 Here are some ingredients for success:
 * Domain knowledge: expertise to distinguish good and bad matches
@@ -51,11 +51,11 @@ Here are some ingredients for success:
 
 **Data science superpowers:** Combination of domain knowledge, data collection and aggregation skills, and machine learning tuning and analysis.
 
-We will be focussed on genealogy as the domain in this badge, and you are going to start with a set of labeled data.  You will be building a binary classifier in this badge, developing features, adjusting parameters and interpreting analytic feedback.  This is an example of supervised learning, where you have labeled data to start with, but often more than half of the machine learning problem is gathering or finding good, representative labeled data.
+We will be focussed on genealogy as the domain in this badge, and you are going to start with a set of labeled data.  You will be building a binary classifier in this badge, developing features, adjusting parameters and interpreting analytic feedback.  This is an example of [supervised learning](https://en.wikipedia.org/wiki/Supervised_learning), where you have labeled data to start with, but often more than half of the machine learning problem is gathering or finding good, representative labeled data.
 
-Different algorithms have different strengths and weaknesses, and often you can combine more than one classifier together in an ensemble to gain additional strength.  The gradient boosting method xgboost uses is like an ensemble of classifiers, but in the end the decision tree can be represented as a single tree.  One strength here is you can inspect the decision tree, and see feature importance and the decision flow.  This is useful when trying to understand what the model you build is learning.  Another cool feature in xgboost is the model stores each training iteration, and you can specify which iteration to use in the stored model.
+Different algorithms have different strengths and weaknesses, and often you can combine more than one classifier together in an ensemble to gain additional strength.  The [gradient boosting](https://en.wikipedia.org/wiki/Gradient_boosting) in xgboost is like an ensemble of classifiers, but in the end the aggregate decision tree is a single tree.  One strength here is you can inspect the decision tree, and see feature importance and the decision flow.  This is useful when trying to understand what the model you build is learning.
 
-We will spend quite a bit of time working with analytic tools and parameters to optimize the model we build.  Most of the parameters available are to help xgboost avoid overfitting.  The gradient boosting degradation is a main theme, where each subsequent training iteration can boost the previous one, but has to have a degradation function for subsequent iterations.  We will also experiment a little of the balance of complexity in the model compared to effectiveness as we adjust some parameters.
+We will spend quite a bit of time working with analytic tools and parameters to optimize the model we build.  Most of the parameters available are to help xgboost avoid overfitting.  In gradient boosting each subsequent training iteration adds to the previous one, so there is a degradation function for subsequent iterations.  We will be looking at a few parameters like the maximum depth of the tree, and looking at overfitting.  But this is just a quick introduction to the main concepts to get you going with xgboost.
 
 There is a workflow that becomes evident in building a good model.  And there is a need to carefully track experiments and measurements along the way.  You will see this workflow in the exercises:
 
@@ -194,7 +194,9 @@ A few pointers on the different xgboost [general parameters](https://xgboost.rea
 * eta is also sometimes called the learning rate, and is important to prevent overfitting
 * We are using defaults for subsample and colsample_bytree - which means we use all the training data at each iteration.  Often, you want to generalize your problem across your training data - so these settings see if the system can generalize solutions when some part of the training data is suppressed each iteration.
 
-We are going to experiment with the max_depth option.  This controls the depth of the resulting decision tree, and probably has some affinity to the number of features you are working with.  For now let's experiment by changing the max_depth from 4 to 6.  Retrain and analyze your model.
+We are going to experiment with the max_depth option.  This controls the depth of the resulting decision tree, and probably has some affinity to the number of features you are working with.  
+
+     Change the max_depth from 4 to 6.  Retrain and analyze your model.
 
 *Question:* How is your accuracy and tree impacted by this change?
 
