@@ -37,7 +37,7 @@ Xgboost by default considers missing data to be zero, and you will see that libs
 An example of libsvm format can be found in learn-xgboost/data directory.  There is also a features.txt file in the data directory that describes each pairing in the .csv data file.  Please review these files in the data directory.
 
 ## Micro-badge
-To get started you need to fork this repository.  You can edit this file and answer the questions that are called out, and then when you are done check-in your work to be reviewed.  The actions are called out like this:
+To get started you need to fork this repository.  To complete this micro-badge please edit this file and answer the 15 questions in sections A-G.  Then when you are done check-in your work to be reviewed.  The actions are called out like this:
 
      Fork this repo.
 
@@ -69,7 +69,8 @@ There is a workflow that becomes evident in building a good model.  And there is
 
 It's somewhat magical when machine learning is done right - your smart speaker understands you, your phone unlocks in poor lighting, web and social media ads know your preferences, etc.  Understanding what is behind the magic takes some practice, but can be fun and eye opening.
 
-### Getting going with feature vectors
+
+### A. Getting going with feature vectors
 To start with please review CreateFeatureVectors1.java.  This implementation is simply comparing the values as strings and giving a 1 for exact matches. Notice it divides the input data into 3 output files.
 
      Run the CreateFeatureVectors1.java file to generate output in the data directory.
@@ -78,18 +79,20 @@ To start with please review CreateFeatureVectors1.java.  This implementation is 
      javaVector_eval.libsvm
      javaVector_train.libsvm
 
-*Question:* What percentage of input lines end up in the vector train and eval files?
+*Question 1:* What percentage of input lines end up in the vector train and eval files?
 
-### Training a model
+
+### B. Training a model
 We want to train our first model and assess the accuracy of the model against the test set.  To do this you can run the py/train-simple.py script. First review the script, and note you need the necessary dependencies installed (see above).  Next, to train the model, run:
 
      python3 py/train-simple.py
      
 Notice we are loading the feature_names, and then the train and eval vector files.  Now would be a good time to review the [xgboost train API documentation](https://xgboost.readthedocs.io/en/latest/python/python_api.html#module-xgboost.training).  Notice that the classifier output from train is used to predict against the test set.  The predictions are then labeled depending on their output probability, and the false-positives and false-negatives are computed by comparing those labels with the input labels.
 
-*Question:* What is the accuracy of your model and how is accuracy computed?
+*Question 2:* What is the accuracy of your model and how is accuracy computed?
 
-### Building and refining features
+
+### C. Building and refining features
 We really need to understand the data we are trying to represent to the machine to build the best model.  In looking at this data sample how can we better compare the target and sample?
 
      Joseph Doherty vs Joseph Edward John Doherty (target and candidate)
@@ -106,11 +109,11 @@ What if instead of comparing whole name strings, we looked for the number of nam
 
      Run the CreateFeatureVectors2.java file.
 
-*Question:* How did the output vectors change?
+*Question 3:* How did the output vectors change?
 
      Train the model with the new vectors.
 
-*Question:* What was the accuracy with the improved name comparison?
+*Question 4:* What was the accuracy with the improved name comparison?
 
 Consider these questions:
 * Remember we just compared all fields exactly. What could we do better when representing the data to the classifier?
@@ -122,11 +125,11 @@ So far we have made a few observations. Simply comparing name strings doesn't be
 
      Uncomment the differentNames else clause in CreateFeatureVectors2.java
 
-*Question:* What will happen with the differentNames clause uncommented?
+*Question 5:* What will happen with the differentNames clause uncommented?
 
      Create the new vectors and train the model.
 
-*Question:* Was the accuracy improved?  How much?  How is this implementation flawed?
+*Question 6:* Was the accuracy improved?  How much?  How is this implementation flawed?
 
 Next consider the dates in the input data.  Close inspection will show that often birth dates are estimates, based on age declared at the time the record is made.  So we need to come up with a way to represent year alignment that is close - and let the machine learn which cases it should pay attention to that.  We have already called out the date fields in CreateFeatureVectors2.java (DATE_FIELDS = {10, 24, 38, 66}).
 
@@ -134,13 +137,14 @@ Next consider the dates in the input data.  Close inspection will show that ofte
 
 Remember that 0 is the default value, and means no data.  So how will we represent year alignment, and the differences?
 
-*Question:* What value will the date fields contain if the year differs by 1?  What about if they differ by 2, or 5?
+*Question 7:* What value will the date fields contain if the year differs by 1?  What about if they differ by 2, or 5?
 
      Run CreateFeatureVectors2.java after uncommenting the code that compares the years into buckets and train a new model.
 
-*Question:* What is the accuracy now?  How could you improve this bucketing?
+*Question 8:* What is the accuracy now?  How could you improve this bucketing?
 
-### Analyzing the model
+
+### D. Analyzing the model
 We have been using the accuracy at 50% probability to measure our progress by running the train-simple.py script, but there are lots of other ways to analyze our model.  Also, accuracy might be better if we choose to look at a different probability threshold.  Please take some time and review the train.py script.  You will see it contains the same train and predict from the train-simple.py script, but there are additional modules loaded.  There is logging and artifact collection using mlflow.  There are additional analysis tools setup - and we have the results at each training iteration.
 
 To start with you can see we will graph the accuracy at each training iteration.
@@ -149,9 +153,9 @@ To start with you can see we will graph the accuracy at each training iteration.
 
 The train.py script will present a number of graphs: Error rates for each iteration, Logloss for each training iteration, Precision/Recall curve for your model, feature importance for your model, and a the decision tree from your model.  (Note: You can close each graph as it pops up, and the next graph will appear.)  Please review each graph and spend some time on the feature importance, and tree plot graphs.
 
-*Question:* What are the three most important features of your model?
+*Question 9:* What are the three most important features of your model?
 
-*Question:* Where in the tree plot is your most important feature?
+*Question 10:* Where in the tree plot is your most important feature?
 
 We haven't discussed overfitting yet, but your simple training output showed that the error rate of your test set actually started getting worse during training.  The Error rates graph gives you some idea of where your test set error rates stopped getting better.
 
@@ -161,11 +165,12 @@ Xgboost has an [early stopping rounds](https://xgboost.readthedocs.io/en/latest/
 
      Find the 'early_stopping_rounds' line in train.py, and exchange that line for the one above it.  Try your training again.
 
-*Question:* What iteration did your model stop on?  Was your accuracy improved?
+*Question 11:* What iteration did your model stop on?  Was your accuracy improved?
 
 The Precision/Recall graph shows the tension between getting all the answers right, and getting answers for all the questions.  You can find an optimal point on the curve where you maximize precision or recall, or maybe you want to balance them.  Then you can find on that curve what the precision threshold is at that point.  If you are interested in pursuing treshold analysis you can look into the data behind the P/R curve.
 
-### Adjusting parameters
+
+### E. Adjusting parameters
 The number of features you have, the way the represent your problem, the amount of training data, the percentage and representativeness of your test set, and the model parameters all influence your ideal outcome.  The complexity of your machine learning model has an optimum for your problem, and the way you have represented it.  So as the data, or features, or parameters change there are different potential optimization points.  This is important to realize as we try to introduce and adjust a few parameters.  It's possible that just a few adjustments to parameters will best leverage the technology you have chosen.
 
 Most of the parameters for xgboost are set to avoid overfitting, and defaults are conservative.  But xgboost is pretty forgiving, and we won't be able to experiment with all the parameters in this micro-badge.  Here is a short explanation of a few parameters:
@@ -198,13 +203,14 @@ We are going to experiment with the max_depth option.  This controls the depth o
 
      Change the max_depth from 4 to 6.  Retrain and analyze your model.
 
-*Question:* How is your accuracy and tree impacted by this change?
+*Question 12:* How is your accuracy and tree impacted by this change?
 
      Try adjusting max_depth some more.
 
-*Question:* How is your accuracy and tree impacted by this change?  Did you find an optimal max_depth?
+*Question 13:* How is your accuracy and tree impacted by this change?  Did you find an optimal max_depth?
 
-### Building your data-science superpowers
+
+### F. Building your data-science superpowers
 Doing all these experiments requires some scientific rigor to understand what is changing, and to track results.  Along the way each training run has been logging the results into an artifact directory, but also the parameters, metrics and artifacts have been logged into [mlflow](https://mlflow.org/) locally.  This is an open-source tool for tracking machine learning and experimenting through the development life-cycle.  We will just be demonstrating a small portion of the functionality - logging training parameters, metrics and artifacts.
 
 Notice the train.py code we log parameters, metrics and artifacts to mlflow.  The result is each run has been accumulating that data to your mlruns directory in this project root.  To startup the UI to browse the results run the following in the root directory:
@@ -213,14 +219,15 @@ Notice the train.py code we log parameters, metrics and artifacts to mlflow.  Th
 
 This will startup a local mlflow UI at http://127.0.0.1:5000 that you can open in your browser.  Input max_depth in the filter params search input and accuracy in the filter metrics input box.  You should see each of your training runs, and the parameters and metrics recorded.  Choose a few runs and click compare - notice you can see how the feature importance changed with your different runs.  Return to the list of runs and click on one - scroll down to the artifacts area and notice you can click on the .png artifacts to display the graphs.
 
-*Question:* What might be useful here in comparing training runs?
+*Question 14:* What might be useful here in comparing training runs?
 
-### Choose your own adventure
+
+### G. Choose your own adventure
 We only scratched the surface of feature development and fitting those features to the machine.  Xgboost allows you to bundle features so they have to stay together, and provide weights to help emphasize what is important.  There are many other ways to better represent our problem, and you might already have noticed a few.  For one, we are only comparing similar fields to each other.  What if the target has a birthdate, but the candidate does not - but the candidate has a child marriage date and the target does not.  Could you add a feature that would expose that inforamtion to the machine and see if it helps improve things?
 
      The final activity is to develop a feature or find another way to improve the accuracy of our example code.
 
-*Question:* What feature did you develop or optimize?  How much did it help improve your model?
+*Question 15:* What feature did you develop or optimize?  How much did it help improve your model?
 
 In summary:
 * Getting good labeled data to represent your problem is often the hardest thing
