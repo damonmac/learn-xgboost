@@ -17,7 +17,7 @@ To train a classifier and test that you have installed the main depdendencies yo
 
 #### Labeled data
 
-There are 2660 pairs in csv format in the data directory 1193 neg (start with "0"), and 1467 pos (start with "1").  The fields then alternate after the good (1) or bad (0) label and include person name, spouse name, father name, mother name, child name, person birth detail (year, month, day, country, county, city, location), spouse birth detail (7 fields), child birth detail (7 fields), census detail (year, month, day, country, county, city, location), and death detail (year, month, day, country, county, city, location).  The last field is a reference id.
+There are 2660 pairs in csv format in the data directory: 1193 negative "not a match" examples (start with "0"), and 1467 positive "matching" examples (start with "1").  Alternating data fields are given after the good (1) or bad (0) label and include person name, spouse name, father name, mother name, child name, person birth detail (year, month, day, country, county, city, location), spouse birth detail (7 fields), child birth detail (7 fields), census detail (year, month, day, country, county, city, location), and death detail (year, month, day, country, county, city, location).  The last field is a reference id.
 
 We will compare each piece of data after the first field (the label), and generate a feature vector for each row.  Those feature vectors are then separated into a training (85%) and a test (15%) set.  Here is a sample row to consider:
 
@@ -51,7 +51,7 @@ Here are some ingredients for success:
 
 **Data science superpowers:** Combination of domain knowledge, data collection and aggregation skills, and machine learning tuning and analysis.
 
-We will be focussed on genealogy as the domain in this badge, and you are going to start with a set of labeled data.  You will be building a binary classifier in this badge, developing features, adjusting parameters and interpreting analytic feedback.  This is an example of [supervised learning](https://en.wikipedia.org/wiki/Supervised_learning), where you have labeled data to start with, but often more than half of the machine learning problem is gathering or finding good, representative labeled data.
+We will be focussed on genealogy as the domain in this badge, and you are going to start with a set of labeled data.  You will be building a binary classifier, developing features, adjusting parameters and interpreting analytic feedback.  This is an example of [supervised learning](https://en.wikipedia.org/wiki/Supervised_learning), where you have labeled data to start with, but often more than half of the machine learning problem is gathering or finding good, representative labeled data.
 
 Different algorithms have different strengths and weaknesses, and often you can combine more than one classifier together in an ensemble to gain additional strength.  The [gradient boosting](https://en.wikipedia.org/wiki/Gradient_boosting) in xgboost is like an ensemble of classifiers, but in the end the aggregate decision tree is a single tree.  One strength here is you can inspect the decision tree, and see feature importance and the decision flow.  This is useful when trying to understand what the model you build is learning.
 
@@ -67,10 +67,10 @@ There is a workflow that becomes evident in building a good model.  And there is
 * Tune parameters
 * Add or adjust training data
 
-It's somewhat magical when machine learning is done right - your smart speaker understands you, your phone unlocks in poor lighting, web and social media adds know your preferences, etc.  Understanding what is behind the magic takes some practice, but can be fun and eye opening.
+It's somewhat magical when machine learning is done right - your smart speaker understands you, your phone unlocks in poor lighting, web and social media ads know your preferences, etc.  Understanding what is behind the magic takes some practice, but can be fun and eye opening.
 
 ### Getting going with feature vectors
-To start with please review CreateFeatureVectors1.java.  This implmentation is simply comparing the values as strings and giving a 1 for exact matches.  Notice it divides the input data into 3 output files.
+To start with please review CreateFeatureVectors1.java.  This implementation is simply comparing the values as strings and giving a 1 for exact matches. Notice it divides the input data into 3 output files.
 
      Run the CreateFeatureVectors1.java file to generate output in the data directory.
      Compare the output and number of lines in the data directory for the following files:
@@ -81,7 +81,7 @@ To start with please review CreateFeatureVectors1.java.  This implmentation is s
 *Question:* What percentage of input lines end up in the vector train and eval files?
 
 ### Training a model
-We want to train our first model and assess the accuracy of the model against the test set.  To do this you can run the py/train-simple.py script.  First review the script, and note you need to the the necessary dependencies installed (see above).  Next to train the model run:
+We want to train our first model and assess the accuracy of the model against the test set.  To do this you can run the py/train-simple.py script. First review the script, and note you need the necessary dependencies installed (see above).  Next, to train the model, run:
 
      python3 py/train-simple.py
      
@@ -113,12 +113,12 @@ What if instead of comparing whole name strings, we looked for the number of nam
 *Question:* What was the accuracy with the improved name comparison?
 
 Consider these questions:
-* Remember we just compared all fields exactly.  What could we do better when representing the data to the classifier?
-* Are there some fields that you know should be compared differently?
+* Remember we just compared all fields exactly. What could we do better when representing the data to the classifier?
+* What are some fields that you know should be compared differently?
 * How much do improved features help the model?  Will we need to do additional parameter optimization if the features improve?
 * What will happen to feature importance if we improve the name feature?
 
-So far we have made a few observations.  Simply comparing name strings doesn't best represent the data to the machine.  Data needs to be normalized and bucketized as we build features.  We have only represented optimistic features to the classifier - patterns that register when things are the same.  In xgboost the default value 0 is used to represent no data, and if either target or candidate doesn't have data to compare, it's like the data isn't there. 
+So far we have made a few observations. Simply comparing name strings doesn't best represent the data to the machine.  Data needs to be normalized and bucketized as we build features. We have only represented optimistic features to the classifier - patterns that register when things are the same. In xgboost the default value 0 is used to represent no data, and if either target or candidate doesn't have data to compare, it's like the data isn't there. 
 
      Uncomment the differentNames else clause in CreateFeatureVectors2.java
 
@@ -141,7 +141,7 @@ Remember that 0 is the default value, and means no data.  So how will we represe
 *Question:* What is the accuracy now?  How could you improve this bucketing?
 
 ### Analyzing the model
-We have been using the accuracy at 50% probability to measure our progress by running the train-simple.py script, but there are lots of other ways to analyze our model.  Also, accuracy might be better if we choose to look at a different probability threshold.  Please take some time and review the train.py script.  Can you see it contains the same train and predict from the train-simple.py script, but there are additional modules loaded.  There is logging and artifact collection using mlflow.  There are additional analysis tools setup - and we have the results at each training iteration.
+We have been using the accuracy at 50% probability to measure our progress by running the train-simple.py script, but there are lots of other ways to analyze our model.  Also, accuracy might be better if we choose to look at a different probability threshold.  Please take some time and review the train.py script.  You will see it contains the same train and predict from the train-simple.py script, but there are additional modules loaded.  There is logging and artifact collection using mlflow.  There are additional analysis tools setup - and we have the results at each training iteration.
 
 To start with you can see we will graph the accuracy at each training iteration.
 
@@ -166,7 +166,7 @@ Xgboost has an [early stopping rounds](https://xgboost.readthedocs.io/en/latest/
 The Precision/Recall graph shows the tension between getting all the answers right, and getting answers for all the questions.  You can find an optimal point on the curve where you maximize precision or recall, or maybe you want to balance them.  Then you can find on that curve what the precision threshold is at that point.  If you are interested in pursuing treshold analysis you can look into the data behind the P/R curve.
 
 ### Adjusting parameters
-The number of features you have, the way the represent your problem, the amount of training data, the percentage and representativeness of your test set, and the model parameters all influence your ideal outcome.  The complexity of your machine learning model has an optimum for your problem, and they way you have represented it.  So as the data, or features, or parameters change there are different potential optimization points.  This is important to realize as we try to introduce and adjust a few parameters.  It's possible that just a few adjustments to parameters will best leverage the technology you have chosen.
+The number of features you have, the way the represent your problem, the amount of training data, the percentage and representativeness of your test set, and the model parameters all influence your ideal outcome.  The complexity of your machine learning model has an optimum for your problem, and the way you have represented it.  So as the data, or features, or parameters change there are different potential optimization points.  This is important to realize as we try to introduce and adjust a few parameters.  It's possible that just a few adjustments to parameters will best leverage the technology you have chosen.
 
 Most of the parameters for xgboost are set to avoid overfitting, and defaults are conservative.  But xgboost is pretty forgiving, and we won't be able to experiment with all the parameters in this micro-badge.  Here is a short explanation of a few parameters:
 
