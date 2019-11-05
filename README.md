@@ -3,15 +3,21 @@ Binary classification example code and data for xgboost.  If you fork this repos
 
 #### Installation
 
-You need to have [python](https://www.python.org/) installed which includes package manager pip.  Mac comes with Python2, but we need python 3.7 or newer.  If you use brew to install python3, then python3 is an alias you can use.  We will also need some graphing tools for analysis.  To install python, [xgboost](https://xgboost.readthedocs.io/en/latest/python/python_api.html#module-xgboost.sklearn), graphing and tracking tools and scikit-learn on Mac:
+You need to have [python3](https://www.python.org/) installed which includes package manager pip.  Mac comes with Python2, but we need python 3.7 or newer.  If you use brew to install python3, then python3 is an alias you can use.  We will also need some graphing tools for analysis.  To install python, [xgboost](https://xgboost.readthedocs.io/en/latest/python/python_api.html#module-xgboost.sklearn), graphing and tracking tools on Mac:
 
      brew install python3 graphviz
      pip3 install scikit-learn xgboost mlflow matplotlib
      
-On Windows you can [install Python from the Microsoft Store](https://www.microsoft.com/en-us/p/python-37/9nj46sx7x90p?activetab=pivot:overviewtab) and then open a terminal and run the pip3 install command above.  On Linux you will want to install similar package names with your package manager.
+On Windows you can [install Ubuntu from the Microsoft Store](https://www.microsoft.com/en-us/p/ubuntu/9nblggh4msv6) and then launch a Ubuntu terminal:
+
+     apt-get update
+     apt-get install python3-pip graphviz
+     pip3 install scikit-learn xgboost mlflow matplotlib graphviz
+
+On other flavors of Linux you will want to install similar package names with your package manager.
 
 #### Training a model with Python
-To train a classifier and test that you have installed the main depdendencies you would run:
+To train a classifier and test that you have installed the main depdendencies you can run:
 
      python3 py/train-simple.py
 
@@ -151,7 +157,7 @@ To start with you can see we will graph the accuracy at each training iteration.
 
      Train again by running the py/train.py script instead of py/train-simple.py
 
-The train.py script will present a number of graphs: Error rates for each iteration, Logloss for each training iteration, Precision/Recall curve for your model, feature importance for your model, and a the decision tree from your model.  (Note: You can close each graph as it pops up, and the next graph will appear.)  Please review each graph and spend some time on the feature importance, and tree plot graphs.
+The train.py script will present a number of graphs: Error rates for each iteration, Logloss for each training iteration, Precision/Recall curve for your model, feature importance for your model, and a the decision tree from your model.  (Note: You can close each graph as it pops up, and the next graph will appear.  If you are using Windows and WSL the graphs will be created in your artifacts directory.)  Please review each graph and spend some time on the feature importance, and tree plot graphs.
 
 *Question 9:* What are the three most important features of your model?
 
