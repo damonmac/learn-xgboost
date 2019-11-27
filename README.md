@@ -16,7 +16,9 @@ On Windows you can [install Ubuntu from the Microsoft Store](https://www.microso
 
 On other flavors of Linux you will want to install similar package names with your package manager.
 
-This repository is set up as a [Maven](https://maven.apache.org/) project. All Java files can be run through IntelliJ or a similar IDE by creating a new project using the included pom.xml file. For users without an IDE that supports Maven, the Maven command line tool can be used to build a jar file through which the Java code can be run.
+This repository is set up as a [Maven](https://maven.apache.org/) project. All Java files can be run through IntelliJ or a similar IDE by creating a new project using the included pom.xml file. For users without an IDE that supports Maven, the Maven command line tool can be used to build a jar file through which the Java code can be run. The following Maven command will generate the jar file in the `target` directory:
+
+     mvn clean install
 
 #### Training a model with Python
 To train a classifier and test that you have installed the main depdendencies you can run:
