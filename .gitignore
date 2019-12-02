@@ -10,3 +10,5 @@ target/
 .idea
 .DS_Store
 output/
+
+mlruns/
