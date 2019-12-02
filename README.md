@@ -165,7 +165,7 @@ The train.py script will present a number of graphs: Error rates for each iterat
 
 *Question 9:* What are the three most important features of your model?
 
-*Question 10:* Where in the tree plot is your most important feature?
+*Question 10:* Where in the tree plot do you expect your most important feature to be?  Where is it actually, and why?
 
 We haven't discussed overfitting yet, but your simple training output showed that the error rate of your test set actually started getting worse during training.  The Error rates graph gives you some idea of where your test set error rates stopped getting better.
 
