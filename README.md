@@ -17,7 +17,7 @@ On Windows you can [install Ubuntu from the Microsoft Store](https://www.microso
 On other flavors of Linux you will want to install similar package names with your package manager.
 
 #### Training a model with Python
-To train a classifier and test that you have installed the main depdendencies you can run:
+To train a classifier and test that you have installed the main dependencies you can run:
 
      python3 py/train-simple.py
 
@@ -57,7 +57,7 @@ Here are some ingredients for success:
 
 **Data science superpowers:** Combination of domain knowledge, data collection and aggregation skills, and machine learning tuning and analysis.
 
-We will be focussed on genealogy as the domain in this badge, and you are going to start with a set of labeled data.  You will be building a binary classifier, developing features, adjusting parameters and interpreting analytic feedback.  This is an example of [supervised learning](https://en.wikipedia.org/wiki/Supervised_learning), where you have labeled data to start with, but often more than half of the machine learning problem is gathering or finding good, representative labeled data.
+We will be focused on genealogy as the domain in this badge, and you are going to start with a set of labeled data.  You will be building a binary classifier, developing features, adjusting parameters and interpreting analytic feedback.  This is an example of [supervised learning](https://en.wikipedia.org/wiki/Supervised_learning), where you have labeled data to start with, but often more than half of the machine learning problem is gathering or finding good, representative labeled data.
 
 Different algorithms have different strengths and weaknesses, and often you can combine more than one classifier together in an ensemble to gain additional strength.  The [gradient boosting](https://en.wikipedia.org/wiki/Gradient_boosting) in xgboost is like an ensemble of classifiers, but in the end the aggregate decision tree is a single tree.  One strength here is you can inspect the decision tree, and see feature importance and the decision flow.  This is useful when trying to understand what the model you build is learning.
 
@@ -173,19 +173,18 @@ Xgboost has an [early stopping rounds](https://xgboost.readthedocs.io/en/latest/
 
 *Question 11:* What iteration did your model stop on?  Was your accuracy improved?
 
-The Precision/Recall graph shows the tension between getting all the answers right, and getting answers for all the questions.  You can find an optimal point on the curve where you maximize precision or recall, or maybe you want to balance them.  Then you can find on that curve what the precision threshold is at that point.  If you are interested in pursuing treshold analysis you can look into the data behind the P/R curve.
-
+The Precision/Recall graph shows the tension between getting all the answers right, and getting answers for all the questions.  You can find an optimal point on the curve where you maximize precision or recall, or maybe you want to balance them.  Then you can find on that curve what the precision threshold is at that point.  If you are interested in pursuing threshold analysis you can look into the data behind the P/R curve.
 
 ### E. Adjusting parameters
 The number of features you have, the way the represent your problem, the amount of training data, the percentage and representativeness of your test set, and the model parameters all influence your ideal outcome.  The complexity of your machine learning model has an optimum for your problem, and the way you have represented it.  So as the data, or features, or parameters change there are different potential optimization points.  This is important to realize as we try to introduce and adjust a few parameters.  It's possible that just a few adjustments to parameters will best leverage the technology you have chosen.
 
 Most of the parameters for xgboost are set to avoid overfitting, and defaults are conservative.  But xgboost is pretty forgiving, and we won't be able to experiment with all the parameters in this micro-badge.  Here is a short explanation of a few parameters:
 
-* max_depth: maximum depth of a tree - increasing may lead to complex tree and overfitting
-* subsample: subsample ratio of training instances, for example .5 would use only half of the training data before each epoch
-* colsample_bytree: subsample ratio of columns for each epoch
-* eta: the learning rate, or the step size shrinkage used to prevent overfitting - each epoch it shrinks the feature weights to make it more conservative
-* gamma: minimum loss reduction to make further partition on lead node - larger gamma is more conservative
+* `max_depth`: maximum depth of a tree - increasing may lead to complex tree and overfitting
+* `subsample`: subsample ratio of training instances, for example .5 would use only half of the training data before each epoch
+* `colsample_bytree`: subsample ratio of columns for each epoch
+* `eta`: the learning rate, or the step size shrinkage used to prevent overfitting - each epoch it shrinks the feature weights to make it more conservative
+* `gamma`: minimum loss reduction to make further partition on lead node - larger gamma is more conservative
 
 We have called out some basic parameters in the params dictionary in the train.py script.  We have been using:
 
@@ -201,9 +200,9 @@ We have called out some basic parameters in the params dictionary in the train.p
               'objective': 'binary:logistic'}
 
 A few pointers on the different xgboost [general parameters](https://xgboost.readthedocs.io/en/latest//parameter.html#general-parameters) and [booster parameters](https://xgboost.readthedocs.io/en/latest//parameter.html#parameters-for-tree-booster): 
-* Our sample data is small enough that we don't notice, but for larger datasets xgboost scales very well.  The n_jobs can leverage the cores in your computer to train in parallel.  Across the different languages this option changes a bit; for example notice in the Train.java file there is no n_jobs parameter.
-* eta is also sometimes called the learning rate, and is important to prevent overfitting
-* We are using defaults for subsample and colsample_bytree - which means we use all the training data at each iteration.  Often, you want to generalize your problem across your training data - so these settings see if the system can generalize solutions when some part of the training data is suppressed each iteration.
+* Our sample data is small enough that we don't notice, but for larger datasets xgboost scales very well.  The `n_jobs` can leverage the cores in your computer to train in parallel.  Across the different languages this option changes a bit; for example notice in the Train.java file there is no n_jobs parameter.
+* `eta` is also sometimes called the learning rate, and is important to prevent overfitting
+* We are using defaults for `subsample` and `colsample_bytree` - which means we use all the training data at each iteration.  Often, you want to generalize your problem across your training data - so these settings see if the system can generalize solutions when some part of the training data is suppressed each iteration.
 
 We are going to experiment with the max_depth option.  This controls the depth of the resulting decision tree, and probably has some affinity to the number of features you are working with.  
 
@@ -229,7 +228,7 @@ This will startup a local mlflow UI at http://127.0.0.1:5000 that you can open i
 
 
 ### G. Choose your own adventure
-We only scratched the surface of feature development and fitting those features to the machine.  Xgboost allows you to bundle features so they have to stay together, and provide weights to help emphasize what is important.  There are many other ways to better represent our problem, and you might already have noticed a few.  For one, we are only comparing similar fields to each other.  What if the target has a birthdate, but the candidate does not - but the candidate has a child marriage date and the target does not.  Could you add a feature that would expose that inforamtion to the machine and see if it helps improve things?
+We only scratched the surface of feature development and fitting those features to the machine.  Xgboost allows you to bundle features so they have to stay together, and provide weights to help emphasize what is important.  There are many other ways to better represent our problem, and you might already have noticed a few.  For one, we are only comparing similar fields to each other.  What if the target has a birth date, but the candidate does not - but the candidate has a child marriage date and the target does not.  Could you add a feature that would expose that information to the machine and see if it helps improve things?
 
      The final activity is to develop a feature or find another way to improve the accuracy of our example code.
 
