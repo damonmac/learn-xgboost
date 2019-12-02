@@ -222,7 +222,7 @@ Notice the train.py code we log parameters, metrics and artifacts to mlflow.  Th
 
      mlflow ui
 
-This will startup a local mlflow UI at http://127.0.0.1:5000 that you can open in your browser.  Input max_depth in the filter params search input and accuracy in the filter metrics input box.  You should see each of your training runs, and the parameters and metrics recorded.  Choose a few runs and click compare - notice you can see how the feature importance changed with your different runs.  Return to the list of runs and click on one - scroll down to the artifacts area and notice you can click on the .png artifacts to display the graphs.
+This will startup a local mlflow UI at http://127.0.0.1:5000 that you can open in your browser.  Select the `matching` experiment in the left pane if it isn't already selected.  Type `max_depth` in the box labeled 'Filter Params:' and `accuracy` in the box labeled 'Filter Metrics:'.  Click 'Search'.  You should see each of your training runs, and the parameters and metrics recorded.  Select a few runs and click 'Compare' - notice how the feature importance changed between runs.  Return to the list of runs and click on one - scroll down to the artifacts area and notice you can click on the .png artifacts to display the graphs.
 
 *Question 14:* What might be useful here in comparing training runs?
 
