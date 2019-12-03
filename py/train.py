@@ -93,9 +93,9 @@ with mlflow.start_run():
   plt.show()
 
   plt.rcParams["figure.figsize"] = (14,3)
-  xgb.plot_tree(clf)
+  xgb.plot_tree(clf, num_trees=0)
   plt.title('Decision Tree')
-  plt.savefig("artifacts/tree.png")
+  plt.savefig("artifacts/tree.png", dpi = 600)
   plt.show()
 
   # persist the model and save artficats to mlflow

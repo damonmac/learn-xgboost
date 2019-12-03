@@ -161,11 +161,13 @@ To start with you can see we will graph the accuracy at each training iteration.
 
      Train again by running the py/train.py script instead of py/train-simple.py
 
-The train.py script will present a number of graphs: Error rates for each iteration, Logloss for each training iteration, Precision/Recall curve for your model, feature importance for your model, and a the decision tree from your model.  (Note: You can close each graph as it pops up, and the next graph will appear.  If you are using Windows and WSL the graphs will be created in your artifacts directory.)  Please review each graph and spend some time on the feature importance, and tree plot graphs.
+The train.py script will present a number of graphs: Error rates for each iteration, Logloss for each training iteration, Precision/Recall curve for your model, feature importance for your model, and the decision tree from your model's first iteration.  (Note: You can close each graph as it pops up, and the next graph will appear.  If you are using Windows and WSL the graphs will be created in your artifacts directory.)  Please review each graph and spend some time on the feature importance, and tree plot graphs.
 
 *Question 9:* What are the three most important features of your model?
 
-*Question 10:* Where in the tree plot do you expect your most important feature to be?  Where is it actually, and why?
+*Question 10:* Where in the first decision tree plot do you expect your most important feature to be?  Where is it actually, and why?
+
+Note: You can modify the 'num_trees' argument in xgb.plot_tree to see the decision tree plot for other iterations.  This gives you some idea of what is happening with each new iteration.  The classifier runs over all the decision trees by default - but you can run it only up to any number of trees in your saved model with additional parameters.
 
 We haven't discussed overfitting yet, but your simple training output showed that the error rate of your test set actually started getting worse during training.  The Error rates graph gives you some idea of where your test set error rates stopped getting better.
 
