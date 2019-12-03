@@ -6,7 +6,7 @@ Binary classification example code and data for xgboost.  If you fork this repos
 You need to have [python3](https://www.python.org/) installed which includes package manager pip.  Mac comes with Python2, but we need python 3.7 or newer.  If you use brew to install python3, then python3 is an alias you can use.  We will also need some graphing tools for analysis.  To install python, [xgboost](https://xgboost.readthedocs.io/en/latest/python/python_api.html#module-xgboost.sklearn), graphing and tracking tools on Mac:
 
      brew install python3 graphviz
-     pip3 install scikit-learn xgboost mlflow matplotlib
+     pip3 install scikit-learn xgboost mlflow matplotlib graphviz
      
 On Windows you can [install Ubuntu from the Microsoft Store](https://www.microsoft.com/en-us/p/ubuntu/9nblggh4msv6) and then launch a Ubuntu terminal:
 
