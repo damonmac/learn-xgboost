@@ -40,7 +40,7 @@ We need to represent the pair similarities and differences as numbers.  Here are
 * How should we generate features from this data?
 * What if data is missing?
 * What about partial name parts matching?
-* Do I need to represent data being close or missing?
+* Do I need to represent close or missing data?
 
 Xgboost by default considers missing data to be zero, and you will see that libsvm formatted vectors in sparse form only show the non-zero features.  To start you need to first review the [xgboost tutorial and training data](https://xgboost.readthedocs.io/en/latest/get_started.html) - including the [Text Input Format](https://xgboost.readthedocs.io/en/latest/tutorials/input_format.html) details describing DMatrix input.
 
@@ -52,7 +52,7 @@ To get started you need to fork this repository.  To complete this micro-badge p
      Fork this repo.
 
 ### What is xgboost (Extreme Gradient Boosting)
-Xgboost is a popular machine learning algorithm.  It creates boosted decision trees, and has a number of performance and optimization techniques built in.  There is good support and documentation at https://xgboost.ai/ and language support for [Python, Java, R, and others](https://xgboost.readthedocs.io/en/latest//index.html).  There are many different algorithms and approaches to machine learning, depending on the problem you want to solve - but we will focus on xgboost in this badge.  To read about other algorithms and solutions [scikit-learn](https://scikit-learn.org/stable/index.html) is a good resource.  Within scikit you can easily experiment with different machine learning methods.  We will only use a few analysis tools from scikit, but see the [scikit API docs](https://scikit-learn.org/stable/modules/classes.html) for examples and documentation if you want.
+Xgboost is a popular machine learning algorithm.  It creates boosted decision trees, and has a number of performance and optimization techniques built in.  There is good support and documentation at https://xgboost.ai/ and language support for [Python, Java, R, and others](https://xgboost.readthedocs.io/en/latest//index.html).  There are many different algorithms and approaches to machine learning, depending on the problem you want to solve - but we will focus on xgboost in this badge.  To read about other algorithms and solutions [scikit-learn](https://scikit-learn.org/stable/index.html) is a good resource.  Within scikit you can easily experiment with different machine learning methods.  We will use a few analysis tools from scikit, but see the [scikit API docs](https://scikit-learn.org/stable/modules/classes.html) for examples and documentation.
 
 Here are some ingredients for success:
 * Domain knowledge: expertise to distinguish good and bad matches
@@ -61,11 +61,11 @@ Here are some ingredients for success:
 
 **Data science superpowers:** Combination of domain knowledge, data collection and aggregation skills, and machine learning tuning and analysis.
 
-We will be focused on genealogy as the domain in this badge, and you are going to start with a set of labeled data.  You will be building a binary classifier, developing features, adjusting parameters and interpreting analytic feedback.  This is an example of [supervised learning](https://en.wikipedia.org/wiki/Supervised_learning), where you have labeled data to start with, but often more than half of the machine learning problem is gathering or finding good, representative labeled data.
+We will be focused on genealogy as the domain in this badge, and you are going to start with a set of labeled data.  You will be **building a binary classifier, developing features, adjusting parameters and interpreting analytic feedback**.  This is an example of [supervised learning](https://en.wikipedia.org/wiki/Supervised_learning), where you must start with labeled data.  Often most of the work is gathering good, representative data for your problem.  (We provide the labeled data for the micro-badge.)
 
-Different algorithms have different strengths and weaknesses, and often you can combine more than one classifier together in an ensemble to gain additional strength.  The [gradient boosting](https://en.wikipedia.org/wiki/Gradient_boosting) in xgboost is like an ensemble of classifiers, but in the end the aggregate decision tree is a single tree.  One strength here is you can inspect the decision tree, and see feature importance and the decision flow.  This is useful when trying to understand what the model you build is learning.
+Different algorithms have different strengths and weaknesses, and often you can combine more than one classifier together in an ensemble to gain additional strength.  The [gradient boosting](https://en.wikipedia.org/wiki/Gradient_boosting) in xgboost ends up as an ensemble of classifiers.  One benefit of starting with decision trees is there are great tools to visualize things like feature importance or decision flow (for example see [this article on interpreting feature importance](https://towardsdatascience.com/interpretable-machine-learning-with-xgboost-9ec80d148d27)).  This is useful when trying to understand what the model you build is learning.
 
-We will spend quite a bit of time working with analytic tools and parameters to optimize the model we build.  Most of the parameters available are to help xgboost avoid overfitting.  In gradient boosting each subsequent training iteration adds to the previous one, so there is a degradation function for subsequent iterations.  We will be looking at a few parameters like the maximum depth of the tree, and looking at overfitting.  But this is just a quick introduction to the main concepts to get you going with xgboost.
+We will spend time working with analytic tools and parameters to optimize the model we build.  Most of the parameters available are to help xgboost avoid overfitting.  In gradient boosting each subsequent training iteration adds to the previous one, so there is a degradation function for subsequent iterations.  We will be looking at a few parameters like the maximum depth of the tree, and looking at overfitting.  But this is just a quick introduction to the main concepts to get you going with xgboost.
 
 There is a workflow that becomes evident in building a good model.  And there is a need to carefully track experiments and measurements along the way.  You will see this workflow in the exercises:
 
