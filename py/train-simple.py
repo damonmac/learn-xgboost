@@ -9,8 +9,8 @@ from sklearn.metrics import accuracy_score
 with open("data/features.txt", "r") as f:
   feature_names = f.read().split("\n")[:-1]
 
-train = xgb.DMatrix('data/javaVector_train.libsvm', feature_names=feature_names)
-test = xgb.DMatrix('data/javaVector_eval.libsvm', feature_names=feature_names)
+train = xgb.DMatrix('data/javaVector_train.libsvm?format=libsvm', feature_names=feature_names)
+test = xgb.DMatrix('data/javaVector_eval.libsvm?format=libsvm', feature_names=feature_names)
 
 eval_metrics = ['error', 'logloss']
 num_boost_rounds = 1000
