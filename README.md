@@ -1,33 +1,71 @@
 # learn-xgboost
 Binary classification example code and data for xgboost.  If you fork this repository and work through all the exercises in this README you can earn the Machine Learning micro-badge (exercises and questions below).  The example training code here is given in Python and Java, but we will focus on Python for training.  The feature development will be in Java.  So you can open this project in Intellij, but you will need to have Python installed.  You do not need to know much Python for the micro-badge, as mostly you will just be adjusting parameters in Python.
 
-#### Installation
+### Installation
 
 You need to have [python3](https://www.python.org/) installed which includes package manager pip.  Mac comes with Python2, but we need python 3.7 or newer.  If you use brew to install python3, then python3 is an alias you can use.  We will also need some graphing tools for analysis.  To install python, [xgboost](https://xgboost.readthedocs.io/en/latest/python/python_api.html#module-xgboost.sklearn), graphing and tracking tools on Mac:
 
-     brew install python3 graphviz
-     pip3 install scikit-learn xgboost mlflow matplotlib graphviz
+```shell
+brew install python3 graphviz;
+pip3 install scikit-learn xgboost mlflow matplotlib graphviz;
+```
      
-On Windows you can [install Ubuntu from the Microsoft Store](https://www.microsoft.com/en-us/p/ubuntu/9nblggh4msv6) and then launch a Ubuntu terminal:
+On Windows you can [install Ubuntu from the Microsoft Store](https://www.microsoft.com/en-us/p/ubuntu/9nblggh4msv6) and then launch an Ubuntu terminal:
 
-     apt-get update
-     apt-get install python3-pip graphviz
-     pip3 install scikit-learn xgboost mlflow matplotlib graphviz
+```shell
+apt-get update;
+apt-get install python3-pip graphviz;
+pip3 install scikit-learn xgboost mlflow matplotlib graphviz;
+```
 
 On other flavors of Linux you will want to install similar package names with your package manager.
 
+### Building the project
+
 This repository is set up as a [Maven](https://maven.apache.org/) project. All Java files can be run through IntelliJ or a similar IDE by creating a new project using the included pom.xml file. For users without an IDE that supports Maven, the Maven command line tool can be used to build a jar file through which the Java code can be run. The following Maven command will generate the jar file in the `target` directory:
 
-     mvn clean install
+```shell
+mvn clean install
+```
 
-#### Training a model with Python
+### Training a model with Python
 To train a classifier and test that you have installed the main dependencies you can run:
 
-     python3 py/train-simple.py
+```shell
+python3 py/train-simple.py
+```
 
-#### Labeled data
+You should see output similar to
+```
+[0]     train-error:0.45088     train-logloss:0.66646   test-error:0.43500      test-logloss:0.66618
+[100]   train-error:0.19956     train-logloss:0.42016   test-error:0.21250      test-logloss:0.48054
+...
+[999]   train-error:0.17345     train-logloss:0.34814   test-error:0.24000      test-logloss:0.51468
+Calculating predictions
+33 false positives, 63 false negatives
+Accuracy: 76.00%
+```
 
-There are 2660 pairs in csv format in the data directory: 1193 negative "not a match" examples (start with "0"), and 1467 positive "matching" examples (start with "1").  Alternating data fields are given after the good (1) or bad (0) label and include person name, spouse name, father name, mother name, child name, person birth detail (year, month, day, country, state, county, city), spouse birth detail (7 fields), child birth detail (7 fields), census detail (year, month, day, country, state, county, city), and death detail (year, month, day, country, state, county, city).  The last field is a reference id.
+You might get the following error:
+```
+XGBoost Library (libxgboost.dylib) could not be loaded.
+Likely causes:
+  * OpenMP runtime is not installed
+    - vcomp140.dll or libgomp-1.dll for Windows
+    - libomp.dylib for Mac OSX
+    - libgomp.so for Linux and other UNIX-like OSes
+    Mac OSX users: Run `brew install libomp` to install OpenMP runtime.
+```
+
+Running this should fix it (on Mac):
+
+```shell
+brew install libomp
+```
+
+### Labeled data
+
+There are 2660 pairs in csv format in the data directory: 1193 negative "not a match" examples (start with "0"), and 1467 positive "matching" examples (start with "1").  Alternating data fields are given after the good (1) or bad (0) label and include person name, spouse name, father name, mother name, child name, person birth detail (year, month, day, country, state, county, city), spouse birth detail (7 fields), childbirth detail (7 fields), census detail (year, month, day, country, state, county, city), and death detail (year, month, day, country, state, county, city).  The last field is a reference id.
 
 We will compare each piece of data after the first field (the label), and generate a feature vector for each row.  Those feature vectors are then separated into a training (85%) and a test (15%) set.  Here is a sample row to consider:
 
@@ -77,7 +115,7 @@ There is a workflow that becomes evident in building a good model.  And there is
 * Tune parameters
 * Add or adjust training data
 
-It's somewhat magical when machine learning is done right - your smart speaker understands you, your phone unlocks in poor lighting, web and social media ads know your preferences, etc.  Understanding what is behind the magic takes some practice, but can be fun and eye opening.
+It's somewhat magical when machine learning is done right - your smart speaker understands you, your phone unlocks in poor lighting, web and social media ads know your preferences, etc.  Understanding what is behind the magic takes some practice, but can be fun and eye-opening.
 
 
 ### A. Getting going with feature vectors
@@ -95,7 +133,9 @@ To start with please review CreateFeatureVectors1.java.  This implementation is 
 ### B. Training a model
 We want to train our first model and assess the accuracy of the model against the test set.  To do this you can run the py/train-simple.py script. First review the script, and note you need the necessary dependencies installed (see above).  Next, to train the model, run:
 
-     python3 py/train-simple.py
+```shell
+python3 py/train-simple.py
+```
      
 Notice we are loading the feature_names, and then the train and eval vector files.  Now would be a good time to review the [xgboost train API documentation](https://xgboost.readthedocs.io/en/latest/python/python_api.html#module-xgboost.training).  Notice that the classifier output from train is used to predict against the test set.  The predictions are then labeled depending on their output probability, and the false-positives and false-negatives are computed by comparing those labels with the input labels.
 
@@ -224,11 +264,11 @@ We are going to experiment with the max_depth option.  This controls the depth o
 ### F. Building your data-science superpowers
 Doing all these experiments requires some scientific rigor to understand what is changing, and to track results.  Along the way each training run has been logging the results into an artifact directory, but also the parameters, metrics and artifacts have been logged into [mlflow](https://mlflow.org/) locally.  This is an open-source tool for tracking machine learning and experimenting through the development life-cycle.  We will just be demonstrating a small portion of the functionality - logging training parameters, metrics and artifacts.
 
-Notice the train.py code we log parameters, metrics and artifacts to mlflow.  The result is each run has been accumulating that data to your mlruns directory in this project root.  To startup the UI to browse the results run the following in the root directory:
+Notice the train.py code we log parameters, metrics and artifacts to mlflow.  The result is each run has been accumulating that data to your mlruns directory in this project root.  To start up the UI to browse the results run the following in the root directory:
 
      mlflow ui
 
-This will startup a local mlflow UI at http://127.0.0.1:5000 that you can open in your browser.  Select the `matching` experiment in the left pane if it isn't already selected.  Type `max_depth` in the box labeled 'Filter Params:' and `accuracy` in the box labeled 'Filter Metrics:'.  Click 'Search'.  You should see each of your training runs, and the parameters and metrics recorded.  Select a few runs and click 'Compare' - notice how the feature importance changed between runs.  Return to the list of runs and click on one - scroll down to the artifacts area and notice you can click on the .png artifacts to display the graphs.
+This will start up a local mlflow UI at http://127.0.0.1:5000 that you can open in your browser.  Select the `matching` experiment in the left pane if it isn't already selected.  Type `max_depth` in the box labeled 'Filter Params:' and `accuracy` in the box labeled 'Filter Metrics:'.  Click 'Search'.  You should see each of your training runs, and the parameters and metrics recorded.  Select a few runs and click 'Compare' - notice how the feature importance changed between runs.  Return to the list of runs and click on one - scroll down to the artifacts area and notice you can click on the .png artifacts to display the graphs.
 
 *Question 14:* What might be useful here in comparing training runs?
 
